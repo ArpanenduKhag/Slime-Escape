@@ -51470,11 +51470,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.460025
+      value: 10.054224
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.9357898
+      value: -3.9384599
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.z
@@ -54954,6 +54954,10 @@ PrefabInstance:
     - target: {fileID: 6405262759803498781, guid: e051654fdb9f49447b9147aa4cc16b2f, type: 3}
       propertyPath: m_Name
       value: JoystickPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6405262759803498781, guid: e051654fdb9f49447b9147aa4cc16b2f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6925773507884522039, guid: e051654fdb9f49447b9147aa4cc16b2f, type: 3}
       propertyPath: m_Pivot.x
