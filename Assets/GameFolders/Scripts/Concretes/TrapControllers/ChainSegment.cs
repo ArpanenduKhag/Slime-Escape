@@ -2,25 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class ChainSegment : MonoBehaviour
 {
-    [SerializeField] float _maxTime;
-    [SerializeField] float _zRotation;
-    float _currentTime;
+    [SerializeField] float _maxTime;    
+    [SerializeField] float _zRotation;  
+    float _currentTime;                 
 
     private void Start()
     {
+        // Sets the initial rotation of the chain segment by adding the given Z rotation value.
         transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z + _zRotation);
     }
+
     private void Update()
     {
+        // Increments the timer by the time passed since the last frame.
         _currentTime += Time.deltaTime;
-        if (_currentTime>_maxTime)
-        {          
-            if(transform.rotation.z>0)
+
+        // When enough time has passed, reverse the rotation direction.
+        if (_currentTime > _maxTime)
+        {
+            // If rotation is positive, rotate back; otherwise rotate forward again.
+            if (transform.rotation.z > 0)
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z - _zRotation);
             else
                 transform.rotation = Quaternion.Euler(0, 0, transform.rotation.z + _zRotation);
+
+            // Reset the timer to start counting for the next swing.
             _currentTime = 0;
         }
     }
