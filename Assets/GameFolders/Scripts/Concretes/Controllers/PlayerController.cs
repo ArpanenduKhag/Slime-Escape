@@ -1,6 +1,6 @@
+using UnityEngine;
 using Abstracts.Input;
 using Movements;
-using UnityEngine;
 using Inputs;
 using Animations;
 using Mechanics;
@@ -12,6 +12,7 @@ namespace Controllers
     {
         bool _isJumped;
         float _horizontalAxis;
+
         IPlayerInput _input;
         CharacterAnimation _anim;
         RbMovement _rb;
@@ -24,7 +25,6 @@ namespace Controllers
         private bool _isPaused;
         private JoystickController _joystick;
 
-        // 🔹 Jump multiplier for Android
         [Header("Platform Settings")]
         [SerializeField] private float androidJumpMultiplier = 1.35f;
         [SerializeField] private float androidMoveSpeedMultiplier = 1.1f;
@@ -40,24 +40,24 @@ namespace Controllers
             _sizeControl = GetComponent<PlayerSizeControl>();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // On Android → Use joystick input
+            // ✅ Use Joystick input on Android
             _joystick = FindObjectOfType<JoystickController>();
             if (_joystick != null)
             {
                 _input = _joystick;
                 Debug.Log("🎮 Using JoystickController for Android input");
 
-                // Boost movement feel for touch devices
+                // Boost player feel
                 _rb.SetPrivateSpeedMultiplier(androidMoveSpeedMultiplier);
                 _rb.SetPrivateJumpMultiplier(androidJumpMultiplier);
             }
             else
             {
-                Debug.LogWarning("⚠️ No JoystickController found, falling back to PC input.");
+                Debug.LogWarning("⚠️ No JoystickController found — fallback to PC input.");
                 _input = new PcInput();
             }
 #else
-            // On PC / Web / Editor
+            // ✅ Use keyboard on PC/Web/Editor
             _input = new PcInput();
             Debug.Log("⌨️ Using PcInput for Editor/PC input");
 #endif
@@ -79,7 +79,7 @@ namespace Controllers
         {
             if (_input == null) return;
 
-            // 🔹 Pause toggle
+            // 🔹 Handle pause toggle
             if (_input.IsExitButton)
             {
                 SoundManager.Instance.PlaySound(2);
@@ -89,7 +89,7 @@ namespace Controllers
 
             if (_isPaused) return;
 
-            // 🔹 Horizontal input
+            // 🔹 Movement input
             _horizontalAxis = _input.HorizontalAxis;
 
             // 🔹 Walk sound
@@ -100,11 +100,9 @@ namespace Controllers
 
             // 🔹 Jump
             if (_input.IsJumpButtonDown && _groundCheck.IsOnGround)
-            {
                 _isJumped = true;
-            }
 
-            // 🔹 Drop down through platforms
+            // 🔹 Drop through platforms
             if (_input.IsDownButton)
                 _platform.DisableCollider();
 
@@ -112,13 +110,10 @@ namespace Controllers
             if (_input.IsInteractButton)
                 _interact.Interact();
 
-            // 🔹 Grow / Shrink (Mobile)
-            if (_input.IsGrowButtonDown && _sizeControl != null)
-                _sizeControl.Grow();
-            if (_input.IsShrinkButtonDown && _sizeControl != null)
-                _sizeControl.Shrink();
+            // 🔹 Handle Grow / Shrink (hold-based)
+            HandleSizeControl();
 
-            // 🔹 Animations
+            // 🔹 Animation handling
             _anim.JumpAnFallAnim(_groundCheck.IsOnGround, _rb.VelocityY);
             _anim.HorizontalAnim(_horizontalAxis);
             _flip.FlipCharacter(_horizontalAxis);
@@ -135,6 +130,34 @@ namespace Controllers
                 SoundManager.Instance.PlaySound(0);
                 _rb.Jump();
                 _isJumped = false;
+            }
+        }
+
+        // 🔹 Centralized size control logic
+        private void HandleSizeControl()
+        {
+            if (_sizeControl == null) return;
+
+            bool growHeld = _input.IsGrowButtonHeld || Input.GetKey(KeyCode.G);
+            bool shrinkHeld = _input.IsShrinkButtonHeld || Input.GetKey(KeyCode.H);
+
+            // Grow
+            if (growHeld && !shrinkHeld)
+            {
+                _sizeControl.OnGrowPressed(true);
+                _sizeControl.OnShrinkPressed(false);
+            }
+            // Shrink
+            else if (shrinkHeld && !growHeld)
+            {
+                _sizeControl.OnShrinkPressed(true);
+                _sizeControl.OnGrowPressed(false);
+            }
+            // Neither
+            else
+            {
+                _sizeControl.OnGrowPressed(false);
+                _sizeControl.OnShrinkPressed(false);
             }
         }
 

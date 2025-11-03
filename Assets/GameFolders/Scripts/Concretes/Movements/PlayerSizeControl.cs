@@ -31,15 +31,16 @@ namespace Mechanics
         private float _currentScaleMultiplier = 1f;
         private float _targetScaleMultiplier = 1f;
 
-        private bool _isGrowPressed = false;
-        private bool _isShrinkPressed = false;
+        // Flags controlled by buttons or keyboard
+        private bool _isGrowHeld = false;
+        private bool _isShrinkHeld = false;
 
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
             _movement = GetComponent<RbMovement>();
 
-            // Store initial physical stats and scale
+            // Cache initial scale and stats
             _initialScale = transform.localScale;
             _initialMass = _rb.mass;
             _initialJumpForce = GetPrivateField<float>(_movement, "_jumpForce");
@@ -54,15 +55,15 @@ namespace Mechanics
 
         private void LateUpdate()
         {
-            // Prevent scale reset from animation or physics updates
+            // Prevent animator or physics from overwriting scale
             transform.localScale = _initialScale * _currentScaleMultiplier;
         }
 
         private void HandleInput()
         {
-            // ✅ PC keyboard input
-            bool growHeld = Input.GetKey(KeyCode.G) || _isGrowPressed;
-            bool shrinkHeld = Input.GetKey(KeyCode.H) || _isShrinkPressed;
+            // ✅ Combine PC keyboard & mobile button flags
+            bool growHeld = Input.GetKey(KeyCode.G) || _isGrowHeld;
+            bool shrinkHeld = Input.GetKey(KeyCode.H) || _isShrinkHeld;
 
             if (growHeld && !shrinkHeld)
                 _targetScaleMultiplier += Time.deltaTime * scaleChangeSpeed;
@@ -71,22 +72,23 @@ namespace Mechanics
             else
                 _targetScaleMultiplier = Mathf.Lerp(_targetScaleMultiplier, 1f, Time.deltaTime * scaleChangeSpeed);
 
+            // Clamp within safe range
             _targetScaleMultiplier = Mathf.Clamp(_targetScaleMultiplier, minScaleMultiplier, maxScaleMultiplier);
         }
 
         private void ApplyScaling()
         {
-            // Smooth transition
+            // Smoothly approach target scale
             _currentScaleMultiplier = Mathf.Lerp(_currentScaleMultiplier, _targetScaleMultiplier, Time.deltaTime * physicsResponseSpeed);
 
-            // Apply visual scale
+            // Apply to transform
             transform.localScale = _initialScale * _currentScaleMultiplier;
 
-            // Update mass based on area scaling
+            // Adjust mass proportionally to area (scale²)
             float targetMass = _initialMass * Mathf.Pow(_currentScaleMultiplier, 2);
             _rb.mass = Mathf.Lerp(_rb.mass, targetMass, Time.deltaTime * physicsResponseSpeed);
 
-            // Adjust speed & jump
+            // Adjust movement and jump inversely to scale
             float targetMoveSpeed = _initialMoveSpeed / _currentScaleMultiplier;
             float targetJumpForce = _initialJumpForce / _currentScaleMultiplier;
 
@@ -97,29 +99,18 @@ namespace Mechanics
                 Mathf.Lerp(GetPrivateField<float>(_movement, "_jumpForce"), targetJumpForce, Time.deltaTime * physicsResponseSpeed));
         }
 
-        // 🔹 PUBLIC METHODS for JoystickController buttons
-        public void Grow()
+        // ✅ Called from UI buttons (PointerDown / PointerUp)
+        public void OnGrowPressed(bool isPressed)
         {
-            _isGrowPressed = true;
-            _isShrinkPressed = false;
-            _targetScaleMultiplier += Time.deltaTime * scaleChangeSpeed * 5f; // instant button press has stronger effect
+            _isGrowHeld = isPressed;
         }
 
-        public void Shrink()
+        public void OnShrinkPressed(bool isPressed)
         {
-            _isShrinkPressed = true;
-            _isGrowPressed = false;
-            _targetScaleMultiplier -= Time.deltaTime * scaleChangeSpeed * 5f;
+            _isShrinkHeld = isPressed;
         }
 
-        // 🔹 Reset flags (Joystick button release can call this)
-        public void StopSizeChange()
-        {
-            _isGrowPressed = false;
-            _isShrinkPressed = false;
-        }
-
-        // --- Reflection Helpers ---
+        // --- Reflection Helpers (for private RbMovement fields) ---
         private T GetPrivateField<T>(object obj, string fieldName)
         {
             var field = obj.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

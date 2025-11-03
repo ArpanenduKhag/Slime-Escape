@@ -12,8 +12,12 @@ namespace Inputs
         public bool IsInteractButton => Input.GetKeyDown(KeyCode.E);
         public bool IsExitButton => Input.GetKeyDown(KeyCode.Escape);
 
-        // 🟩 New controls for slime size
-        public bool IsGrowButtonDown => Input.GetKeyDown(KeyCode.Z);  // Grow slime
-        public bool IsShrinkButtonDown => Input.GetKeyDown(KeyCode.X); // Shrink slime
+        // 🟩 Tap-based (for PC)
+        public bool IsGrowButtonDown => Input.GetKey(KeyCode.Z);   // Hold or tap to grow
+        public bool IsShrinkButtonDown => Input.GetKey(KeyCode.X); // Hold or tap to shrink
+
+        // 🟩 Hold-based (same for PC — mirrors Down for compatibility)
+        public bool IsGrowButtonHeld => Input.GetKey(KeyCode.Z);
+        public bool IsShrinkButtonHeld => Input.GetKey(KeyCode.X);
     }
 }
