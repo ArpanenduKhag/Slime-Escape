@@ -24,3 +24,11 @@ public class TriggerController : MonoBehaviour
             collision.gameObject.GetComponent<Health>().CooldownTimeAfterHit = _initialCooldownTime;
     }
 }
+
+
+
+// When the player enters, the script saves their current cooldown value.
+
+// While they stay inside, it sets the cooldown to 0, meaning the player can take damage continuously (for example, from spikes).
+
+// When the player leaves, it restores their original cooldown value.

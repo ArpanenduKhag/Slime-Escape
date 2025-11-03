@@ -40,7 +40,7 @@ namespace Controllers
             _sizeControl = GetComponent<PlayerSizeControl>();
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // ✅ Use Joystick input on Android
+            // Use Joystick input on Android
             _joystick = FindObjectOfType<JoystickController>();
             if (_joystick != null)
             {
@@ -57,7 +57,7 @@ namespace Controllers
                 _input = new PcInput();
             }
 #else
-            // ✅ Use keyboard on PC/Web/Editor
+            // Use keyboard on PC/Web/Editor
             _input = new PcInput();
             Debug.Log("⌨️ Using PcInput for Editor/PC input");
 #endif
@@ -85,7 +85,7 @@ namespace Controllers
                 SoundManager.Instance.PlaySound(2);
 
             #if UNITY_ANDROID && !UNITY_EDITOR
-                // ✅ Android back button support
+                // Android back button support
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     if (_isPaused)

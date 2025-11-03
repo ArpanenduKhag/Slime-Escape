@@ -9,11 +9,11 @@ namespace Abstracts.Input
         bool IsInteractButton { get; }
         bool IsExitButton { get; }
 
-        // 🟩 For both PC (tap-based) and Android (hold-based)
+        // For both PC (tap-based) and Android (hold-based)
         bool IsGrowButtonDown { get; }
         bool IsShrinkButtonDown { get; }
 
-        // 🟩 For hold detection on mobile
+        // For hold detection on mobile
         bool IsGrowButtonHeld { get; }
         bool IsShrinkButtonHeld { get; }
     }
