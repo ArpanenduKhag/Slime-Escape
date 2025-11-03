@@ -79,41 +79,56 @@ namespace Controllers
         {
             if (_input == null) return;
 
-            // 🔹 Handle pause toggle
-            if (_input.IsExitButton)
+            // Handle pause toggle (ESC key or Android back button)
+            if (_input.IsExitButton || Input.GetKeyDown(KeyCode.Escape))
             {
                 SoundManager.Instance.PlaySound(2);
-                if (_isPaused) GameManager.Instance.UnpauseGame();
-                else GameManager.Instance.PauseGame();
+
+            #if UNITY_ANDROID && !UNITY_EDITOR
+                // ✅ Android back button support
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    if (_isPaused)
+                        GameManager.Instance.UnpauseGame();
+                    else
+                        GameManager.Instance.PauseGame();
+                }
+            #else
+                if (_isPaused)
+                    GameManager.Instance.UnpauseGame();
+                else
+                    GameManager.Instance.PauseGame();
+            #endif
             }
+
 
             if (_isPaused) return;
 
-            // 🔹 Movement input
+            // Movement input
             _horizontalAxis = _input.HorizontalAxis;
 
-            // 🔹 Walk sound
+            // Walk sound
             if (_horizontalAxis != 0 && _groundCheck.IsOnGround)
                 SoundManager.Instance.PlaySound(1);
             else
                 SoundManager.Instance.StopSound(1);
 
-            // 🔹 Jump
+            // Jump
             if (_input.IsJumpButtonDown && _groundCheck.IsOnGround)
                 _isJumped = true;
 
-            // 🔹 Drop through platforms
+            // Drop through platforms
             if (_input.IsDownButton)
                 _platform.DisableCollider();
 
-            // 🔹 Interact
+            // Interact
             if (_input.IsInteractButton)
                 _interact.Interact();
 
-            // 🔹 Handle Grow / Shrink (hold-based)
+            // Handle Grow / Shrink (hold-based)
             HandleSizeControl();
 
-            // 🔹 Animation handling
+            // Animation handling
             _anim.JumpAnFallAnim(_groundCheck.IsOnGround, _rb.VelocityY);
             _anim.HorizontalAnim(_horizontalAxis);
             _flip.FlipCharacter(_horizontalAxis);
@@ -133,7 +148,7 @@ namespace Controllers
             }
         }
 
-        // 🔹 Centralized size control logic
+        // Centralized size control logic
         private void HandleSizeControl()
         {
             if (_sizeControl == null) return;
