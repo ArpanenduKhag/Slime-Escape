@@ -120,7 +120,7 @@ namespace Inputs
                 hasJumpedThisSwipe = true;
             }
 
-            // 🟩 Down swipe detection
+            // Down swipe detection
             if (!hasDownTriggeredThisSwipe && inputVector.y < downThreshold)
             {
                 isDownPressed = true;
