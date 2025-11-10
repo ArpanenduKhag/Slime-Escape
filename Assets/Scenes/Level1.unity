@@ -1023,7 +1023,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 156, y: -119}
+  m_AnchoredPosition: {x: 3.0354195, y: -129}
   m_SizeDelta: {x: 82.07, y: 81.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &120487308
@@ -5182,6 +5182,7 @@ MonoBehaviour:
   joystickHandle: {fileID: 1541635782}
   handleRange: 100
   jumpThreshold: 0.277
+  downThreshold: -0.45
   jumpButton: {fileID: 0}
   interactButton: {fileID: 749401203}
   exitButton: {fileID: 0}
@@ -7503,7 +7504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 34.064728, y: -119.000015}
+  m_AnchoredPosition: {x: -118.89986, y: -129.00002}
   m_SizeDelta: {x: 82.07, y: 81.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &749401203
@@ -17794,7 +17795,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 277.56473, y: -119.000015}
+  m_AnchoredPosition: {x: 124.6, y: -129}
   m_SizeDelta: {x: 82.07, y: 81.03}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2080259309
@@ -51583,11 +51584,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.036396
+      value: 14.402265
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.93847
+      value: -3.9358299
       objectReference: {fileID: 0}
     - target: {fileID: 5856422514961853146, guid: 97332725e1c9d544db02e3efe0053527, type: 3}
       propertyPath: m_LocalPosition.z
